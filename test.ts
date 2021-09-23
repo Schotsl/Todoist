@@ -1,9 +1,9 @@
 import { TodoistAPI } from "./index.ts";
 import { initializeEnv } from "../../helper.ts";
 
-initializeEnv(["TODOIST"]);
+initializeEnv(["TODOIST_TOKEN"]);
 
-const todoistKey = Deno.env.get("TODOIST");
+const todoistKey = Deno.env.get("TODOIST_TOKEN");
 const todoistAPI = new TodoistAPI(todoistKey!);
 
 Deno.test("Todoist task API", async () => {
