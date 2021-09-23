@@ -76,5 +76,5 @@ Deno.test("inserting, deleting and fetching sections", async () => {
   }
 
   // Clean up the temporary project
-  await todoistAPI.deleteProject(insertObject.id!);
+  await todoistAPI.deleteProject(insertProject.id!);
 });
