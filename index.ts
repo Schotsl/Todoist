@@ -9,7 +9,6 @@ export class TodoistAPI {
 
   private generateHeaders(): HeadersInit {
     return {
-      // TODO: Use build in crypto uuid function
       "Authorization": `Bearer ${this.key}`,
       "Content-Type": `application/json`,
       "X-Request-Id": globalThis.crypto.randomUUID(),
