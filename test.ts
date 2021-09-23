@@ -6,80 +6,75 @@ initializeEnv(["TODOIST_TOKEN"]);
 const todoistKey = Deno.env.get("TODOIST_TOKEN");
 const todoistAPI = new TodoistAPI(todoistKey!);
 
-Deno.test("Todoist task API", async () => {
-  // Test the task related insertion and fetch requests
-  const newTask = await todoistAPI.addTask({ content: `Test` });
-  const insertResults = await todoistAPI.getTask();
-  if (
-    typeof insertResults.find((taskObject) => taskObject.id === newTask.id) ===
-      "undefined"
-  ) {
+Deno.test("inserting, deleting and fetching tasks", async () => {
+  // Test task insertion
+  const insertObject = await todoistAPI.addTask({ content: `Test` });
+  const insertArray = await todoistAPI.getTask();
+  const insertFound = insertArray.find((x) => x.id === insertObject.id);
+
+  if (typeof (insertFound) === "undefined") {
     throw Error("Todoist API couldn't insert or fetch tasks");
   }
 
-  // Test the task related deletion and fetch requests
-  await todoistAPI.deleteTask(newTask.id!);
-  const deletionResults = await todoistAPI.getTask();
-  if (
-    typeof deletionResults.find((taskObject) =>
-      taskObject.id === newTask.id
-    ) !== "undefined"
-  ) {
+  // Test task deletion
+  await todoistAPI.deleteTask(insertObject.id!);
+
+  const deletionArray = await todoistAPI.getTask();
+  const deletionFound = deletionArray.find((x) => x.id === insertObject.id);
+
+  if (typeof (deletionFound) !== "undefined") {
     throw Error("Todoist API couldn't delete or fetch tasks");
   }
 });
 
-Deno.test("Todoist project API", async () => {
-  const newProject = await todoistAPI.addProject({ name: `Test` });
-  const insertResults = await todoistAPI.getProject();
-  if (
-    typeof insertResults.find((projectObject) =>
-      projectObject.id === newProject.id
-    ) === "undefined"
-  ) {
+Deno.test("inserting, deleting and fetching projects", async () => {
+  // Test project insertion
+  const insertObject = await todoistAPI.addProject({ name: `Test` });
+  const insertArray = await todoistAPI.getProject();
+  const insertFound = insertArray.find((x) => x.id === insertObject.id);
+
+  if (typeof (insertFound) === "undefined") {
     throw Error("Todoist API couldn't insert or fetch projects");
   }
 
-  await todoistAPI.deleteProject(newProject.id!);
-  const deletionResults = await todoistAPI.getProject();
-  if (
-    typeof deletionResults.find((projectObject) =>
-      projectObject.id === newProject.id
-    ) !== "undefined"
-  ) {
+  // Test project deletion
+  await todoistAPI.deleteProject(insertObject.id!);
+
+  const deletionArray = await todoistAPI.getProject();
+  const deletionFound = deletionArray.find((x) => x.id === insertObject.id);
+
+  if (typeof (deletionFound) !== "undefined") {
     throw Error("Todoist API couldn't delete or fetch projects");
   }
 });
 
-// This test suit relies on the Todoist project API
-Deno.test("Todoist section API", async () => {
+Deno.test("inserting, deleting and fetching sections", async () => {
   // Create temporary project to test sections in
-  const newProject = await todoistAPI.addProject({ name: `Test` });
+  const insertProject = await todoistAPI.addProject({ name: `Test` });
 
-  // Test the section related insertion and fetch requests
-  const newSection = await todoistAPI.addSection(
-    { name: `Test`, project_id: newProject.id! },
-  );
-  const insertResults = await todoistAPI.getSection();
-  if (
-    typeof insertResults.find((sectionObject) =>
-      sectionObject.id === newSection.id
-    ) === "undefined"
-  ) {
+  // Test section insertion
+  const insertObject = await todoistAPI.addSection({
+    name: `Test`,
+    project_id: insertProject.id!,
+  });
+
+  const insertArray = await todoistAPI.getSection();
+  const insertFound = insertArray.find((x) => x.id === insertObject.id);
+
+  if (typeof (insertFound) === "undefined") {
     throw Error("Todoist API couldn't insert or fetch sections");
   }
 
-  // Test the section related deletion and fetch requests
-  await todoistAPI.deleteSection(newSection.id!);
-  const deletionResults = await todoistAPI.getSection();
-  if (
-    typeof deletionResults.find((sectionObject) =>
-      sectionObject.id === newSection.id
-    ) !== "undefined"
-  ) {
+  // Test section deletion
+  await todoistAPI.deleteSection(insertObject.id!);
+
+  const deletionArray = await todoistAPI.getSection();
+  const deletionFound = deletionArray.find((x) => x.id === insertObject.id);
+
+  if (typeof (deletionFound) !== "undefined") {
     throw Error("Todoist API couldn't delete or fetch sections");
   }
 
   // Clean up the temporary project
-  await todoistAPI.deleteProject(newProject.id!);
+  await todoistAPI.deleteProject(insertObject.id!);
 });
