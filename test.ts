@@ -1,5 +1,5 @@
 import { TodoistAPI } from "./index.ts";
-import { initializeEnv } from "../../helper.ts";
+import { initializeEnv } from "./helper.ts";
 
 initializeEnv(["TODOIST_TOKEN"]);
 
